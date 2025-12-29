@@ -1,0 +1,33 @@
+name: expense-tracker-spring
+services:
+  postgres:
+    container_name: postgresql-et
+    image: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: Admin@321
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: expense_tracker
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5433:5432"
+    networks:
+      - expense-tracker-network
+    restart: unless-stopped
+  mail-dev:
+    container_name: mail-dev-et
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    networks:
+      - expense-tracker-network
+
+networks:
+  expense-tracker-network:
+    driver: bridge
+
+volumes:
+  postgres:
+    driver: local
