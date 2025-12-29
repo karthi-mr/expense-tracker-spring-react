@@ -1,3 +1,14 @@
 spring:
   application:
     name: expense-tracker
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+
+server:
+  port: 8088
+  servlet:
+    context-path: /api/v1/
