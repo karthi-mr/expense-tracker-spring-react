@@ -70,7 +70,7 @@ public class CategoryController {
                 .build();
     }
 
-    @GetMapping("/eod-category/{category-id}")
+    @PostMapping("/eod-category/{category-id}")
     public ResponseEntity<?> enableOrDisableCategory(
             @PathVariable(value = "category-id") Long categoryId,
             Authentication connectedUser

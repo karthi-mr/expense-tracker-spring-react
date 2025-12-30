@@ -3,6 +3,7 @@ package com.preflearn.expense_tracker.expense;
 import com.preflearn.expense_tracker.common.PageResponse;
 import com.preflearn.expense_tracker.expense.dto.ExpenseRequestDto;
 import com.preflearn.expense_tracker.expense.dto.ExpenseResponseDto;
+import com.preflearn.expense_tracker.expense.dto.SumExpenseDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -68,5 +69,14 @@ public class ExpenseController {
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
+    }
+
+    @GetMapping("/getSumExpenses")
+    public ResponseEntity<SumExpenseDto> getSumExpenses(
+            Authentication connectedUser
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.expenseService.getSumExpenses(connectedUser));
     }
 }

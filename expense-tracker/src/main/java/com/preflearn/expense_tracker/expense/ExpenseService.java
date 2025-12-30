@@ -5,8 +5,7 @@ import com.preflearn.expense_tracker.category.CategoryRepository;
 import com.preflearn.expense_tracker.common.PageResponse;
 import com.preflearn.expense_tracker.exception.OperationNotPermittedException;
 import com.preflearn.expense_tracker.exception.UserNotFoundException;
-import com.preflearn.expense_tracker.expense.dto.ExpenseRequestDto;
-import com.preflearn.expense_tracker.expense.dto.ExpenseResponseDto;
+import com.preflearn.expense_tracker.expense.dto.*;
 import com.preflearn.expense_tracker.user.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -38,7 +39,7 @@ public class ExpenseService {
             throw new UserNotFoundException();
         }
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("created_date").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("last_modified_date").descending());
         Page<Expense> expenses = this.expenseRepository.findExpenseByUserId(pageable, user.getId());
         List<ExpenseResponseDto> expenseResponseDtos = expenses.stream()
                 .map(this.expenseMapper::expenseToExpenseResponseDto)
@@ -141,5 +142,45 @@ public class ExpenseService {
             throw new OperationNotPermittedException("You don't have permission to view this expense");
         }
         return this.expenseMapper.expenseToExpenseResponseDto(expense);
+    }
+
+    protected SumExpenseDto getSumExpenses(
+            Authentication connectedUser
+    ) {
+        User user = (User) connectedUser.getPrincipal();
+
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+
+        BigDecimal totalExpenses = this.expenseRepository.getTotalExpenses(user.getId());
+        BigDecimal last7DaysExpense =
+                this.expenseRepository.getTotalExpensesForLastNDays(
+                        LocalDateTime.now().minusDays(7),
+                        user.getId()
+                );
+        BigDecimal last30DaysExpense =
+                this.expenseRepository.getTotalExpensesForLastNDays(
+                        LocalDateTime.now().minusDays(30),
+                        user.getId()
+                );
+        BigDecimal last365DaysExpense =
+                this.expenseRepository.getTotalExpensesForLastNDays(
+                        LocalDateTime.now().minusDays(365),
+                        user.getId()
+                );
+        List<CategoryExpenseSummaryDto> categoryExpenseSummaryDtos =
+                this.expenseRepository.getCategoriesExpenseSum(user.getId());
+        List<DailyExpenseSummaryDto> dailyExpenseSummaryDtos =
+                this.expenseRepository.getDailyExpenseSum(LocalDateTime.now().minusDays(30), user.getId());
+
+        return SumExpenseDto.builder()
+                .last7DaysExpense(last7DaysExpense)
+                .last30DaysExpense(last30DaysExpense)
+                .last365DaysExpense(last365DaysExpense)
+                .totalExpenses(totalExpenses)
+                .dailyExpenseSummaryDtos(dailyExpenseSummaryDtos)
+                .categoryExpenseSummaryDtos(categoryExpenseSummaryDtos)
+                .build();
     }
 }
