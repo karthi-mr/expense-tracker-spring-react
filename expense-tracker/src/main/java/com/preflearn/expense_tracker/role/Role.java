@@ -27,8 +27,8 @@ public class Role {
     @Column(unique = true)
     private String name;
 
-    @CreatedDate
     @Column(nullable = false, updatable = false)
+    @CreatedDate
     private LocalDateTime createdDate;
 
     @LastModifiedDate

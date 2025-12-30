@@ -20,7 +20,7 @@ public class ExpenseController {
     private final ExpenseService expenseService;
 
     @GetMapping
-    public ResponseEntity<PageResponse<ExpenseResponseDto>> findAllCategory(
+    public ResponseEntity<PageResponse<ExpenseResponseDto>> findAllExpense(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication connectedUser
@@ -30,7 +30,7 @@ public class ExpenseController {
 
 
     @GetMapping("/{expense-id}")
-    public ResponseEntity<?> findCategoryById(
+    public ResponseEntity<?> findExpenseById(
             @PathVariable(value = "expense-id") Long expenseId,
             Authentication connectedUser
     ) {
@@ -50,7 +50,7 @@ public class ExpenseController {
     }
 
     @PutMapping("/{expense-id}")
-    public ResponseEntity<ExpenseResponseDto> updateCategory(
+    public ResponseEntity<ExpenseResponseDto> updateExpense(
             @PathVariable(value = "expense-id") Long expenseId,
             @RequestBody ExpenseRequestDto expenseRequestDto,
             Authentication connectedUser
@@ -61,7 +61,7 @@ public class ExpenseController {
     }
 
     @DeleteMapping("/{expense-id}")
-    public ResponseEntity<?> deleteCategory(
+    public ResponseEntity<?> deleteExpense(
             @PathVariable(value = "expense-id") Long expenseId,
             Authentication connectedUser
     ) {

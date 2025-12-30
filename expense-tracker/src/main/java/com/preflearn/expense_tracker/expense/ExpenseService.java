@@ -39,7 +39,7 @@ public class ExpenseService {
             throw new UserNotFoundException();
         }
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("last_modified_date").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("lastModifiedDate").descending());
         Page<Expense> expenses = this.expenseRepository.findExpenseByUserId(pageable, user.getId());
         List<ExpenseResponseDto> expenseResponseDtos = expenses.stream()
                 .map(this.expenseMapper::expenseToExpenseResponseDto)

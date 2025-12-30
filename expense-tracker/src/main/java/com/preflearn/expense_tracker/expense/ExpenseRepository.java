@@ -59,7 +59,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
                 COALESCE(SUM(expense.amount), CAST(0 AS bigdecimal))
             FROM
                 Expense expense
-                JOIN Category category
+                INNER JOIN Category category
+                ON expense.category.id = category.id
             WHERE
                 expense.user.id = :userId
             GROUP BY
@@ -83,7 +84,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
             GROUP BY
                 expense.createdDate
             ORDER BY
-                SUM(expense.createdDate) DESC
+                expense.createdDate DESC
             """
     )
     List<DailyExpenseSummaryDto> getDailyExpenseSum(

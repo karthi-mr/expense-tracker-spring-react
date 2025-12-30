@@ -15,8 +15,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             FROM
             	Category category
             WHERE
-            	category.user.id = :userId OR
-                category.user.id = 1
+            	category.user.id = :userId
             """)
     Page<Category> findCategoryByUserId(Pageable pageable, Long userId);
 }

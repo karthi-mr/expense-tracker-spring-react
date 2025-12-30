@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
-import io.swagger.v3.oas.annotations.servers.Servers;
 
 @OpenAPIDefinition(
         info = @Info(
@@ -24,6 +23,7 @@ import io.swagger.v3.oas.annotations.servers.Servers;
                         name = "License name",
                         url = "https://license@preflearn.com"
                 ),
+                version = "1.0.0",
                 termsOfService = "Terms of Service"
         ),
         servers = {
