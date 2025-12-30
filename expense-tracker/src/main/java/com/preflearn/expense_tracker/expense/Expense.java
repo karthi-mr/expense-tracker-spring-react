@@ -1,6 +1,7 @@
-package com.preflearn.expense_tracker.category;
+package com.preflearn.expense_tracker.expense;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.preflearn.expense_tracker.category.Category;
 import com.preflearn.expense_tracker.common.BaseEntity;
 import com.preflearn.expense_tracker.user.User;
 import jakarta.persistence.*;
@@ -10,25 +11,27 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
 @Entity
-@Table(
-        name = "categories",
-        uniqueConstraints = @UniqueConstraint(
-                name = "unique_user_categoryName",
-                columnNames = {"category_name", "user_id"})
-)
-public class Category extends BaseEntity {
-
-    @Column(name = "category_name", nullable = false, length = 100)
-    private String categoryName;
+@Table(name = "expenses")
+public class Expense extends BaseEntity {
 
     @Column(nullable = false)
-    private boolean categoryEnabled;
+    private String expenseTitle;
+
+    @Column(nullable = false, scale = 2)
+    private BigDecimal amount;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "category_id", nullable = false)
+    @JsonIgnore
+    private Category category;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)

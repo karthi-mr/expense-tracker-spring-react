@@ -24,7 +24,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
-    public PageResponse<CategoryResponseDto> findAllCategory(int page, int size, Authentication connectedUser) {
+    protected PageResponse<CategoryResponseDto> findAllCategory(int page, int size, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
         if (user == null) {
             throw new EntityNotFoundException("User not found");
@@ -45,7 +45,7 @@ public class CategoryService {
         );
     }
 
-    public CategoryResponseDto createCategory(
+    protected CategoryResponseDto createCategory(
             CategoryRequestDto categoryRequestDto,
             Authentication connectedUser
     ) {
@@ -64,29 +64,11 @@ public class CategoryService {
         return this.categoryMapper.categoryToCategoryResponseDto(savedCategory);
     }
 
-    public CategoryResponseDto updateCategory(
+    protected CategoryResponseDto updateCategory(
             Long categoryId,
             CategoryRequestDto categoryRequestDto,
             Authentication connectedUser
     ) {
-        Category category = getAndCheckCategory(categoryId, connectedUser);
-        category.setCategoryName(categoryRequestDto.categoryName());
-        Category updatedCategory = this.categoryRepository.save(category);
-        return this.categoryMapper.categoryToCategoryResponseDto(updatedCategory);
-    }
-
-    public void deleteCategory(Long categoryId, Authentication connectedUser) {
-        Category category = getAndCheckCategory(categoryId, connectedUser);
-        this.categoryRepository.delete(category);
-    }
-
-    public void enableOrDisableCategory(Long categoryId, Authentication connectedUser) {
-        Category category = getAndCheckCategory(categoryId, connectedUser);
-        category.setCategoryEnabled(!category.isCategoryEnabled());
-        this.categoryRepository.save(category);
-    }
-
-    private Category getAndCheckCategory(Long categoryId, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
         Category category = this.categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
@@ -96,9 +78,60 @@ public class CategoryService {
         }
 
         if (!Objects.equals(category.getUser().getId(), user.getId())) {
-            throw new OperationNotPermittedException("You don't have access to update the category belongs to " +
+            throw new OperationNotPermittedException("You don't have permission to update this category");
+        }
+        category.setCategoryName(categoryRequestDto.categoryName());
+        Category updatedCategory = this.categoryRepository.save(category);
+        return this.categoryMapper.categoryToCategoryResponseDto(updatedCategory);
+    }
+
+    protected void deleteCategory(Long categoryId, Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+        Category category = this.categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+
+        if (user == null) {
+            throw new EntityNotFoundException("User not found");
+        }
+
+        if (!Objects.equals(category.getUser().getId(), user.getId())) {
+            throw new OperationNotPermittedException("You don't have permission to delete this category");
+        }
+        this.categoryRepository.delete(category);
+    }
+
+    protected void enableOrDisableCategory(Long categoryId, Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+        Category category = this.categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+
+        if (user == null) {
+            throw new EntityNotFoundException("User not found");
+        }
+
+        if (!Objects.equals(category.getUser().getId(), user.getId())) {
+            throw new OperationNotPermittedException("You don't have permission to enable / disable this category");
+        }
+        category.setCategoryEnabled(!category.isCategoryEnabled());
+        this.categoryRepository.save(category);
+    }
+
+    protected CategoryResponseDto findCategoryById(
+            Long categoryId,
+            Authentication connectedUser
+    ) {
+        User user = (User) connectedUser.getPrincipal();
+        Category category = this.categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+
+        if (user == null) {
+            throw new EntityNotFoundException("User not found");
+        }
+
+        if (!Objects.equals(category.getUser().getId(), user.getId())) {
+            throw new OperationNotPermittedException("You don't have access to view this category belongs to " +
                     "another person");
         }
-        return category;
+        return this.categoryMapper.categoryToCategoryResponseDto(category);
     }
 }

@@ -27,6 +27,17 @@ public class CategoryController {
         return ResponseEntity.ok(this.categoryService.findAllCategory(page, size, connectedUser));
     }
 
+
+    @GetMapping("/{category-id}")
+    public ResponseEntity<?> findCategoryById(
+            @PathVariable(value = "category-id") Long categoryId,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.categoryService.findCategoryById(categoryId, connectedUser));
+    }
+
     @PostMapping
     public ResponseEntity<CategoryResponseDto> createCategory(
             @RequestBody CategoryRequestDto categoryRequestDto,
