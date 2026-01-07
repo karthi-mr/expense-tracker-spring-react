@@ -1,0 +1,92 @@
+package com.preflearn.etracker.expense;
+
+import com.preflearn.etracker.expense.dto.CategoryExpenseSummaryDto;
+import com.preflearn.etracker.expense.dto.DailyExpenseSummaryDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
+public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
+
+    @Query("""
+            SELECT
+                expense
+            FROM
+                Expense expense
+            WHERE
+                expense.user.id = :userId
+            """)
+    Page<Expense> findExpenseByUserId(Pageable pageable, Integer userId);
+
+    @Query(
+            """
+            SELECT
+                COALESCE(SUM(expense.amount), 0)
+            FROM
+                Expense expense
+            WHERE
+                expense.user.id = :userId
+            """
+    )
+    BigDecimal getTotalExpenses(Integer userId);
+
+    @Query(
+            """
+            SELECT
+                COALESCE(SUM(expense.amount), 0)
+            FROM
+                Expense expense
+            WHERE
+                expense.user.id = :userId AND
+                expense.createdDate >= :fromDate
+            """
+    )
+    BigDecimal getTotalExpensesForLastNDays(@Param("fromDate") LocalDateTime fromDate, Integer userId);
+
+    @Query(
+            value = """
+            SELECT \s
+                category.id,
+                category.categoryName,
+                COALESCE(SUM(expense.amount), CAST(0 AS bigdecimal))
+            FROM
+                Expense expense
+                INNER JOIN Category category
+                ON expense.category.id = category.id
+            WHERE
+                expense.user.id = :userId
+            GROUP BY
+                category.id, category.categoryName
+            ORDER BY
+                SUM(expense.amount) DESC
+            """
+    )
+    List<CategoryExpenseSummaryDto> getCategoriesExpenseSum(@Param("userId") Integer userId);
+
+    @Query(
+            value = """
+            SELECT \s
+                expense.createdDate,
+                COALESCE(SUM(expense.amount), CAST(0 AS bigdecimal))
+            FROM
+                Expense expense
+            WHERE
+                expense.user.id = :userId AND
+                expense.createdDate >= :fromDate
+            GROUP BY
+                expense.createdDate
+            ORDER BY
+                expense.createdDate DESC
+            """
+    )
+    List<DailyExpenseSummaryDto> getDailyExpenseSum(
+            @Param("fromDate") LocalDateTime fromDate,
+            @Param("userId") Integer userId
+    );
+}
