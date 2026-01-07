@@ -58,7 +58,7 @@ public class JwtAuthService {
     }
 
     // generating Bearer token
-    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts
                 .builder()
                 .claims(extraClaims)
@@ -68,9 +68,5 @@ public class JwtAuthService {
                 .claim("authorities", userDetails.getAuthorities())
                 .signWith(this.getSigninKey(), HS256)
                 .compact();
-    }
-
-    public String generateToken(UserDetails userDetails) {
-        return this.generateToken(Map.of(), userDetails);
     }
 }
