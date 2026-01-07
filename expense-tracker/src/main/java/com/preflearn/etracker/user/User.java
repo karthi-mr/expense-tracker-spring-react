@@ -1,5 +1,7 @@
 package com.preflearn.etracker.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.preflearn.etracker.category.Category;
 import jakarta.persistence.*;
 import lombok.*;
 import org.jspecify.annotations.NonNull;
@@ -37,6 +39,10 @@ public class User implements UserDetails, Principal {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Category> categories;
 
     @Override
     public String getName() {
