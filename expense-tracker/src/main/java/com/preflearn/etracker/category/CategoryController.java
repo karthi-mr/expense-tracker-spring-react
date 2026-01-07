@@ -22,8 +22,8 @@ public class CategoryController {
     @GetMapping
     @ResponseStatus(OK)
     public ResponseEntity<PageResponse<CategoryResponse>> findAll(
-            @RequestParam(name = "page", value = "page") int page,
-            @RequestParam(name = "size", value = "size") int size,
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(categoryService.findAllCategory(page, size, connectedUser));
