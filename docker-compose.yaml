@@ -6,17 +6,20 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: expense-tracker
+      POSTGRES_DB: expense_tracker
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - postgres:/data/postgres
     restart: unless-stopped
     ports:
-      - "5434:5432"
+      - "5433:5432"
     networks:
       - expense-tracker-network
   adminer:
     image: adminer
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "8064:8080"
     networks:
       - expense-tracker-network
 
@@ -24,3 +27,7 @@ services:
 networks:
   expense-tracker-network:
     driver: bridge
+
+volumes:
+  postgres:
+    driver: local

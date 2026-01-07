@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5434/expense-tracker
+    url: jdbc:postgresql://localhost:5433/expense_tracker
     username: admin
     password: admin
     driver-class-name: org.postgresql.Driver
@@ -8,10 +8,7 @@ spring:
     hibernate:
       ddl-auto: update
     database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    properties:
-      hibernate:
-        show_sql: true
+    show-sql: true
 
 application:
   security:
