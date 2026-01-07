@@ -23,7 +23,7 @@ import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.HTTP;
      ),
     servers = {
              @Server(
-                     url = "http://localhost:8082",
+                     url = "http://localhost:8082/api/v1",
                      description = "Local ENV Server"
              )
     },

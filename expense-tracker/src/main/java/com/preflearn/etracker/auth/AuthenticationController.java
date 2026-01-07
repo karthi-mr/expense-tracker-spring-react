@@ -1,6 +1,7 @@
 package com.preflearn.etracker.auth;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,16 +22,15 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("authenticate")
-
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest authenticationRequest
+            @RequestBody @Valid AuthenticationRequest authenticationRequest
     ) {
         return ResponseEntity.ok(this.authenticationService.authenticate(authenticationRequest));
     }
 
     @PostMapping("register")
     public ResponseEntity<Void> register(
-            @RequestBody RegistrationRequest registrationRequest
+            @RequestBody @Valid RegistrationRequest registrationRequest
     ) {
         this.authenticationService.register(registrationRequest);
         return ResponseEntity
