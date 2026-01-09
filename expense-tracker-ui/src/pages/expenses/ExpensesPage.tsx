@@ -1,23 +1,25 @@
 import { type ReactElement, useEffect, useState } from "react";
-import { enableDisableCategory, findAllCategories } from "../../services/CategoryService.ts";
 import type { AxiosError, AxiosResponse } from "axios";
 import type { PageResponse } from "../../model/PageResponse.ts";
 import { type NavigateFunction, useNavigate } from "react-router-dom";
 import PaginationComponent from "../../components/PaginationComponent.tsx";
-import type { CategoryResponse } from "../../model/Catergory.ts";
+import { findAllExpenses } from "../../services/ExpenseService.ts";
+import type { ExpenseResponse } from "../../model/ExpenseModel.ts";
+import { AMOUNT_SYMBOL, formatDate, getTotalExpense } from "../../utils/Utils.ts";
 
 
 const pageSizeOptions: Array<number> = [5, 10, 25, 50];
-function CategoriesPage(): ReactElement {
+function ExpensesPage(): ReactElement {
   const [page, setPage] = useState<number>(0);
   const [size, setSize] = useState<number>(10);
-  const [pageResponse, setPageResponse] = useState<PageResponse<CategoryResponse> | undefined>(undefined);
+  const [totalExpense, setTotalExpense] = useState<number>(0.00);
+  const [pageResponse, setPageResponse] = useState<PageResponse<ExpenseResponse> | undefined>(undefined);
   const navigator: NavigateFunction = useNavigate();
 
   useEffect(() => {
-    findAllCategories(page, size)
-      .then((response: AxiosResponse<PageResponse<CategoryResponse>>) => {
-        console.log(response.data);
+    findAllExpenses(page, size)
+      .then((response: AxiosResponse<PageResponse<ExpenseResponse>>) => {
+        setTotalExpense(getTotalExpense(response.data.content));
         setPageResponse({
           content: response.data.content,
           first: response.data.first,
@@ -26,36 +28,15 @@ function CategoriesPage(): ReactElement {
           size: response.data.size,
           totalElements: response.data.totalElements,
           totalPages: response.data.totalPages
-        })
+        });
       })
       .catch((error: AxiosError) => console.log(error))
-  }, [page, size])
-
-  function handleEnableDisableCategory(categoryId: number): void {
-    enableDisableCategory(categoryId)
-      .then(() => {
-        findAllCategories(page, size)
-          .then((response: AxiosResponse<PageResponse<CategoryResponse>>) => {
-            console.log(response.data);
-            setPageResponse({
-              content: response.data.content,
-              first: response.data.first,
-              last: response.data.last,
-              pageNumber: response.data.pageNumber,
-              size: response.data.size,
-              totalElements: response.data.totalElements,
-              totalPages: response.data.totalPages
-            })
-          })
-          .catch((error: AxiosError) => console.log(error))
-      })
-      .catch((error: AxiosError) => console.log(error))
-  }
+  }, [page, size]);
 
   return (
     <div className="min-w-full min-h-full flex items-start justify-center px-4 py-5">
       <div
-        className="w-full max-w-3xl rounded-2xl bg-slate-900/80 border border-slate-800 shadow-2xl p-6 md:p-8"
+        className="w-full max-w-5xl rounded-2xl bg-slate-900/80 border border-slate-800 shadow-2xl p-6 md:p-8"
       >
 
         {/* header */}
@@ -63,21 +44,21 @@ function CategoriesPage(): ReactElement {
           className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-6"
         >
           <div>
-            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Categories</h1>
+            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Expenses</h1>
             <p className="text-sm text-slate-400 mt-1">
-              Manage your categories
+              Manage your expenses
             </p>
           </div>
 
           <div className="w-full md:w-40">
-            {/* create category */}
+            {/* create expense */}
             <button
               type="button"
-              onClick={() => navigator("/categories/create")}
+              onClick={() => navigator("/expenses/create")}
               className="w-full rounded-xl bg-blue-800/80 px-3 py-2 text-sm cursor-pointer
               hover:bg-blue-700 transition-colors"
             >
-              Create Category
+              Create Expense
             </button>
           </div>
         </div>
@@ -86,58 +67,62 @@ function CategoriesPage(): ReactElement {
         <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60">
           <table className="min-w-full text-sm">
             <thead className="bg-slate-900/90 border-b border-slate-800">
-              <tr>
-                <th className="px-4 py-3 text-left font-medium">Category Name</th>
-                <th className="px-4 py-3 text-left font-medium">Category Enabled</th>
-                <th className="px-4 py-3 text-left font-medium">Actions</th>
+              <tr className="divide-x divide-slate-700">
+                <th className="px-4 py-3 text-center font-medium">Expense Title</th>
+                <th className="px-4 py-3 text-center font-medium">Expense Amount</th>
+                <th className="px-4 py-3 text-center font-medium">Category</th>
+                <th className="px-4 py-3 text-center font-medium">Created At</th>
+                <th className="px-4 py-3 text-center font-medium">Last Modified At</th>
+                <th className="px-4 py-3 text-center font-medium">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {(!pageResponse || pageResponse.size === 0 || !pageResponse.content) && (
+              {(!pageResponse || pageResponse.totalElements === 0 || !pageResponse.content) && (
                 <tr>
                   <td
-                    colSpan={3}
+                    colSpan={6}
                     className="text-center px-4 py-3 text-slate-500 font-semibold"
                   >
-                    No Categories found. Please create new category
+                    No Expense found. Please create new expense
                   </td>
                 </tr>
               )}
-              {pageResponse?.content.map(category => (
+              {pageResponse && pageResponse.content.map((expense: ExpenseResponse) => (
                 <tr
-                  key={category.categoryId}
-                  className="border-t border-slate-800 hover:bg-slate-800/60"
+                  key={expense.expenseId}
+                  className="border-t border-slate-800 hover:bg-slate-800/60 divide-x divide-slate-700"
                 >
-                  <td className="px-4 py-3">{category.categoryName}</td>
-                  <td className="px-12 py-3">
-                    <button
-                      onClick={() => handleEnableDisableCategory(category.categoryId)}
-                      className={`relative inline-flex h-6 w-11 items-center cursor-pointer rounded-full transition
-                      ${
-                        category.isEnabled ? "bg-blue-600" : "bg-gray-400"
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-5 w-5 transform rounded-full bg-white transition
-                        ${
-                          category.isEnabled ? "translate-x-5" : "translate-x-1"
-                        }`}
-                      />
-                    </button>
+                  <td className="px-4 py-3 text-center truncate" title={expense.expenseTitle}>
+                    {expense.expenseTitle.length >= 20
+                      ? `${expense.expenseTitle.slice(0, 20)}...`
+                      : expense.expenseTitle}
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    {`${AMOUNT_SYMBOL}${expense.amount.toFixed(2)}`}
+                  </td>
+                  <td className="px-4 py-3 text-center truncate" title={expense.categoryName}>
+                    {expense.categoryName.length >= 20
+                      ? `${expense.categoryName.slice(0, 20)}...`
+                      : expense.categoryName}
+                  </td>
+                  <td className="px-4 py-3 text-center">{formatDate(expense.createdAt)}</td>
+                  <td className="px-4 py-3 text-center">
+                    {new Date(expense.lastModifiedAt) < new Date(expense.createdAt)
+                      ? "-" : formatDate(expense.lastModifiedAt)}
                   </td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex gap-1.5">
                       <button
                         className="px-2 py-1.5 rounded-lg border border-slate-700 hover:bg-slate-800
                         cursor-pointer transition-colors"
-                        onClick={() => navigator(`/categories/update/${category.categoryId}`)}
+                        onClick={() => navigator(`/expenses/update/${expense.expenseId}`)}
                       >
                         Edit
                       </button>
                       <button
                         className="px-2 py-1.5 rounded-lg border border-red-700/30
                         bg-red-700/70 hover:bg-red-700 cursor-pointer transition-colors"
-                        onClick={() => navigator(`/categories/delete/${category.categoryId}`)}
+                        onClick={() => navigator(`/expenses/delete/${expense.expenseId}`)}
                       >
                         Delete
                       </button>
@@ -146,6 +131,14 @@ function CategoriesPage(): ReactElement {
                 </tr>
               ))}
             </tbody>
+            <tfoot>
+              <tr className="border-t border-slate-800 hover:bg-slate-800/60 divide-x divide-slate-700">
+                <td className="px-4 py-3 text-center font-medium">Total Expense</td>
+                <td className="px-4 py-3 text-center font-medium">
+                  ${totalExpense.toFixed(2)}
+                </td>
+              </tr>
+            </tfoot>
           </table>
         </div>
 
@@ -184,4 +177,4 @@ function CategoriesPage(): ReactElement {
   );
 }
 
-export default CategoriesPage;
+export default ExpensesPage;

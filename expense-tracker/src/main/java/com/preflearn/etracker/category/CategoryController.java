@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
@@ -27,6 +29,12 @@ public class CategoryController {
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(categoryService.findAllCategory(page, size, connectedUser));
+    }
+
+    @GetMapping("get")
+    @ResponseStatus(OK)
+    public ResponseEntity<List<CategoryResponse>> findAllCategories(Authentication connectedUser) {
+        return ResponseEntity.ok(categoryService.findAllCategories(connectedUser));
     }
 
     @GetMapping("{category-id}")

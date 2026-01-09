@@ -1,11 +1,9 @@
-import type { CategoryResponse } from "./Catergory.ts";
-
-export type PageResponse = {
-  content: Array<CategoryResponse>;
+export interface PageResponse<T> {
+  content: T[];
   pageNumber: number;
   size: number;
   totalElements: number;
   totalPages: number;
   first: boolean;
   last: boolean;
-};
+}

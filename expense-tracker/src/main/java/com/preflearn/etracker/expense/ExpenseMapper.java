@@ -11,9 +11,13 @@ public class ExpenseMapper {
 
     public ExpenseResponseDto toExpenseResponseDto(Expense expense) {
         return ExpenseResponseDto.builder()
+                .expenseId(expense.getId())
                 .expenseTitle(expense.getTitle())
                 .amount(expense.getAmount())
+                .categoryId(expense.getCategory().getId())
                 .categoryName(expense.getCategory().getCategoryName())
+                .createdAt(expense.getCreatedDate())
+                .lastModifiedAt(expense.getLastModifiedDate())
                 .build();
     }
 

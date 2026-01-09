@@ -50,6 +50,18 @@ public class CategoryService {
         );
     }
 
+    public List<CategoryResponse> findAllCategories(
+            Authentication connectedUser
+    ) {
+        User user = (User) connectedUser.getPrincipal();
+        if (user == null) {
+            throw new EntityNotFoundException("User not found");
+        }
+        return categoryRepository.findCategoriesById(user.getId()).stream()
+                .map(categoryMapper::toCategoryResponse)
+                .toList();
+    }
+
     public CategoryResponse createCategory(CategoryRequest categoryRequest, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
         if (user == null) {

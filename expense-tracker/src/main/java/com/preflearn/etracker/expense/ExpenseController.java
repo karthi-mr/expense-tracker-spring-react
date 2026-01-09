@@ -38,6 +38,16 @@ public class ExpenseController {
                 .body(this.expenseService.createExpense(expenseRequestDto, connectedUser));
     }
 
+    @GetMapping("/{expense-id}")
+    public ResponseEntity<ExpenseResponseDto> getExpenseById(
+            @PathVariable(value = "expense-id") Integer expenseId,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity
+                .status(OK)
+                .body(this.expenseService.getExpenseById(expenseId, connectedUser));
+    }
+
     @PutMapping("/{expense-id}")
     public ResponseEntity<ExpenseResponseDto> updateExpense(
             @PathVariable(value = "expense-id") Integer expenseId,

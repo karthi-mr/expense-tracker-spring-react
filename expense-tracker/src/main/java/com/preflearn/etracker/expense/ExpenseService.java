@@ -71,6 +71,22 @@ public class ExpenseService {
         return expenseMapper.toExpenseResponseDto(savedExpense);
     }
 
+    public ExpenseResponseDto getExpenseById(
+            Integer expenseId,
+            Authentication connectedUser
+    ) {
+        User user = (User) connectedUser.getPrincipal();
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        var expense = expenseRepository.findById(expenseId)
+                .orElseThrow(() -> new ExpenseNotFoundException("Expense not found for id: " + expenseId));
+        if (!Objects.equals(expense.getUser().getId(), user.getId())) {
+            throw new ExpenseOperationNotPermittedException();
+        }
+        return expenseMapper.toExpenseResponseDto(expense);
+    }
+
     public ExpenseResponseDto updateExpense(
             Integer expenseId,
             ExpenseRequestDto request,
