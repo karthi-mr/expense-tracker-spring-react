@@ -3,13 +3,18 @@ package com.preflearn.etracker.expense.dto;
 import lombok.Builder;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.sql.Date;
+import java.time.LocalDate;
 
 @Builder
 public record DailyExpenseSummaryDto(
 
-        LocalDateTime date,
+        LocalDate date,
 
         BigDecimal totalAmount
 ) {
+
+    public DailyExpenseSummaryDto(Date createdDate, BigDecimal totalAmount) {
+        this(createdDate.toLocalDate(), totalAmount);
+    }
 }

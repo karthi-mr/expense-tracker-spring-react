@@ -69,10 +69,9 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
     )
     List<CategoryExpenseSummaryDto> getCategoriesExpenseSum(@Param("userId") Integer userId);
 
-    @Query(
-            value = """
+    @Query("""
             SELECT \s
-                expense.createdDate,
+                CAST(expense.createdDate AS DATE),
                 COALESCE(SUM(expense.amount), CAST(0 AS bigdecimal))
             FROM
                 Expense expense
@@ -80,9 +79,9 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
                 expense.user.id = :userId AND
                 expense.createdDate >= :fromDate
             GROUP BY
-                expense.createdDate
+                CAST(expense.createdDate AS DATE)
             ORDER BY
-                expense.createdDate DESC
+                CAST(expense.createdDate AS DATE) DESC
             """
     )
     List<DailyExpenseSummaryDto> getDailyExpenseSum(

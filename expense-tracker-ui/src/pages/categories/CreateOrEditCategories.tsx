@@ -1,7 +1,7 @@
 import { type ReactElement, useEffect, useState } from "react";
 import { type NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { addCategory, findCategory, updateCategory } from "../../services/CategoryService.ts";
-import type { ExpenseRequest, CategoryResponse } from "../../model/Catergory.ts";
+import type { CategoryRequest, CategoryResponse } from "../../model/Catergory.ts";
 import type { AxiosResponse } from "axios";
 
 function CreateOrEditCategories(): ReactElement {
@@ -21,7 +21,7 @@ function CreateOrEditCategories(): ReactElement {
   }, [id]);
 
   function handleAddOrUpdateCategory(): void {
-    const categoryRequest: ExpenseRequest = {"name": categoryName};
+    const categoryRequest: CategoryRequest = {"name": categoryName};
     if (!isEditMode) {
       addCategory(categoryRequest)
         .then(() => navigator("/categories"))
