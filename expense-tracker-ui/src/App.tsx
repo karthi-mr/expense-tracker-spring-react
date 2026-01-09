@@ -7,6 +7,7 @@ import ProtectedRoute from "./utils/ProtectedRoute.tsx";
 import DashboardPage from "./pages/common/DashboardPage.tsx";
 import CategoriesPage from "./pages/categories/CategoriesPage.tsx";
 import CreateOrEditCategories from "./pages/categories/CreateOrEditCategories.tsx";
+import DeleteCategoriesPage from "./pages/categories/deleteCategoriesPage.tsx";
 
 export default function App (): ReactElement {
   return (
@@ -38,6 +39,10 @@ export default function App (): ReactElement {
             <Route
               path="update/:id"
               element={<ProtectedRoute><CreateOrEditCategories /></ProtectedRoute>}
+            />
+            <Route
+              path="delete/:id"
+              element={<ProtectedRoute><DeleteCategoriesPage /></ProtectedRoute>}
             />
           </Route>
 

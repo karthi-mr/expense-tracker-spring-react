@@ -90,7 +90,7 @@ function CategoriesPage(): ReactElement {
               <tr>
                 <th className="px-4 py-3 text-left font-medium">Category Name</th>
                 <th className="px-4 py-3 text-left font-medium">Category Enabled</th>
-                <th className="px-14 py-3 text-left font-medium">Actions</th>
+                <th className="px-4 py-3 text-left font-medium">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -110,7 +110,22 @@ function CategoriesPage(): ReactElement {
                   className="border-t border-slate-800 hover:bg-slate-800/60"
                 >
                   <td className="px-4 py-3">{category.categoryName}</td>
-                  <td className="px-12 py-3">{category.isEnabled ? "✅" : "❌"}</td>
+                  <td className="px-12 py-3">
+                    <button
+                      onClick={() => handleEnableDisableCategory(category.categoryId)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition
+                      ${
+                        category.isEnabled ? "bg-blue-600" : "bg-gray-400"
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-5 w-5 transform rounded-full bg-white transition
+                        ${
+                          category.isEnabled ? "translate-x-5" : "translate-x-1"
+                        }`}
+                      />
+                    </button>
+                  </td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex gap-1.5">
                       <button
@@ -123,16 +138,9 @@ function CategoriesPage(): ReactElement {
                       <button
                         className="px-2 py-1.5 rounded-lg border border-red-700/30
                         bg-red-700/70 hover:bg-red-700 cursor-pointer transition-colors"
+                        onClick={() => navigator(`/categories/delete/${category.categoryId}`)}
                       >
                         Delete
-                      </button>
-                      <button
-                        className={`px-2 py-1.5 rounded-lg border  cursor-pointer transition-colors 
-                        ${category.isEnabled ? "border-red-700/30 bg-red-800/70 hover:bg-red-800" : 
-                          "border-green-700/30 bg-green-700/70 hover:bg-green-700"}`}
-                        onClick={() => handleEnableDisableCategory(category.categoryId)}
-                      >
-                        {category.isEnabled ? "Disable" : "Enable"}
                       </button>
                     </div>
                   </td>

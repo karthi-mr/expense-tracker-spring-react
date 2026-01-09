@@ -71,6 +71,11 @@ public class CategoryService {
         return categoryMapper.toCategoryResponse(savedCategory);
     }
 
+    public CategoryResponse getCategoryById(Integer categoryId, Authentication connectedUser) {
+        var category = extractUserAndCategory(categoryId, connectedUser);
+        return categoryMapper.toCategoryResponse(category);
+    }
+
     private Category extractUserAndCategory(Integer categoryId, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
         if (user == null) {
