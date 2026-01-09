@@ -52,9 +52,7 @@ function CategoriesPage(): ReactElement {
   }
 
   return (
-    <div
-      className="min-h-screen bg-slate-950 text-slate-100 flex items-start justify-center px-4 py-10"
-    >
+    <div className="min-w-full min-h-full flex items-start justify-center px-4 py-5">
       <div
         className="w-full max-w-3xl rounded-2xl bg-slate-900/80 border border-slate-800 shadow-2xl p-6 md:p-8"
       >
@@ -113,7 +111,7 @@ function CategoriesPage(): ReactElement {
                   <td className="px-12 py-3">
                     <button
                       onClick={() => handleEnableDisableCategory(category.categoryId)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition
+                      className={`relative inline-flex h-6 w-11 items-center cursor-pointer rounded-full transition
                       ${
                         category.isEnabled ? "bg-blue-600" : "bg-gray-400"
                       }`}

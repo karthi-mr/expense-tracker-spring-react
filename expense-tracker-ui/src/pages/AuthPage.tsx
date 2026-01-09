@@ -95,11 +95,10 @@ function AuthPage({ initialMode }: AuthPageProps): ReactElement {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-500
-      via-purple-500 to-pink-500 px-4"
+      className="min-h-screen min-w-full flex items-center justify-center"
     >
       <div
-        className="w-full max-w-md rounded-3xl bg-white/80 shadow-2xl backdrop-blur-xl
+        className="w-full max-w-lg rounded-2xl bg-white/80 shadow-2xl backdrop-blur-xl
         p-8 transition-all"
       >
         {/* toggle */}
