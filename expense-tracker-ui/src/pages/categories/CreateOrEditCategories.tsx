@@ -38,7 +38,7 @@ function CreateOrEditCategories(): ReactElement {
       <div
         className="w-full max-w-md rounded-2xl bg-slate-900/80 border border-slate-800 shadow-2xl p-6 md:p-8"
       >
-        <h1 className="text-2xl font-medium text-center">Add Category</h1>
+        <h1 className="text-2xl font-medium text-center">{isEditMode ? "Update" : "Add"} Category</h1>
         <p className="mt-2 text-md text-center text-slate-400">Enter a name for the new category.</p>
         <input
           type="text"
