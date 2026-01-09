@@ -28,31 +28,33 @@ function NavbarComponent(): ReactElement {
         </div>
 
         {/* middle */}
-        <div className="flex justify-center gap-6">
-          <NavLink
-            to={"/dashboard"}
-            className={({ isActive }) =>
-              isActive ? `${linkClasses} ${activeClasses}` : linkClasses}
-          >
-            Dashboard
-          </NavLink>
+        {token && (
+          <div className="flex justify-center gap-6">
+            <NavLink
+              to={"/dashboard"}
+              className={({ isActive }) =>
+                isActive ? `${linkClasses} ${activeClasses}` : linkClasses}
+            >
+              Dashboard
+            </NavLink>
 
-          <NavLink
-            to={"/categories"}
-            className={({ isActive }) =>
-              isActive ? `${linkClasses} ${activeClasses}` : linkClasses}
-          >
-            Categories
-          </NavLink>
+            <NavLink
+              to={"/categories"}
+              className={({ isActive }) =>
+                isActive ? `${linkClasses} ${activeClasses}` : linkClasses}
+            >
+              Categories
+            </NavLink>
 
-          <NavLink
-            to={"/expenses"}
-            className={({ isActive }) =>
-              isActive ? `${linkClasses} ${activeClasses}` : linkClasses}
-          >
-            Expenses
-          </NavLink>
-        </div>
+            <NavLink
+              to={"/expenses"}
+              className={({ isActive }) =>
+                isActive ? `${linkClasses} ${activeClasses}` : linkClasses}
+            >
+              Expenses
+            </NavLink>
+          </div>
+        )}
 
         {/* right */}
         <div className="text-right">

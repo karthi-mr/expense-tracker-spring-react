@@ -67,7 +67,7 @@ function ExpensesPage(): ReactElement {
         <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/60">
           <table className="min-w-full text-sm">
             <thead className="bg-slate-900/90 border-b border-slate-800">
-              <tr className="divide-x divide-slate-700">
+              <tr className="">
                 <th className="px-4 py-3 text-center font-medium">Expense Title</th>
                 <th className="px-4 py-3 text-center font-medium">Expense Amount</th>
                 <th className="px-4 py-3 text-center font-medium">Category</th>
@@ -90,7 +90,7 @@ function ExpensesPage(): ReactElement {
               {pageResponse && pageResponse.content.map((expense: ExpenseResponse) => (
                 <tr
                   key={expense.expenseId}
-                  className="border-t border-slate-800 hover:bg-slate-800/60 divide-x divide-slate-700"
+                  className="border-t border-slate-800 hover:bg-slate-800/60"
                 >
                   <td className="px-4 py-3 text-center truncate" title={expense.expenseTitle}>
                     {expense.expenseTitle.length >= 20
@@ -132,7 +132,7 @@ function ExpensesPage(): ReactElement {
               ))}
             </tbody>
             <tfoot>
-              <tr className="border-t border-slate-800 hover:bg-slate-800/60 divide-x divide-slate-700">
+              <tr className="border-t border-slate-800 hover:bg-slate-800/60">
                 <td className="px-4 py-3 text-center font-medium">Total Expense</td>
                 <td className="px-4 py-3 text-center font-medium">
                   ${totalExpense.toFixed(2)}
