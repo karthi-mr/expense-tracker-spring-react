@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/expense_tracker
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    show-sql: true
+
+application:
+  security:
+    secret-key: 93f9941ffeb0acf0aee0ffb34e70a40d6ff54d450b34f82201fc85a4a4058c35
+    expiration: 86_400_000
+  front-end:
+    url: http://localhost:5173

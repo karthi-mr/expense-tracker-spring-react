@@ -1,0 +1,95 @@
+package com.preflearn.etracker.category;
+
+import com.preflearn.etracker.category.dto.CategoryRequest;
+import com.preflearn.etracker.category.dto.CategoryResponse;
+import com.preflearn.etracker.common.PageResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static org.springframework.http.HttpStatus.*;
+
+@RestController
+@RequestMapping("category")
+@RequiredArgsConstructor
+@Tag(name = "Category", description = "Expense category")
+public class CategoryController {
+
+    private final CategoryService categoryService;
+
+    @GetMapping
+    @ResponseStatus(OK)
+    public ResponseEntity<PageResponse<CategoryResponse>> findAll(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(categoryService.findAllCategory(page, size, connectedUser));
+    }
+
+    @GetMapping("get")
+    @ResponseStatus(OK)
+    public ResponseEntity<List<CategoryResponse>> findAllCategories(Authentication connectedUser) {
+        return ResponseEntity.ok(categoryService.findAllCategories(connectedUser));
+    }
+
+    @GetMapping("{category-id}")
+    @ResponseStatus(OK)
+    public ResponseEntity<CategoryResponse> findAll(
+            @PathVariable("category-id") Integer categoryId,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(categoryService.getCategoryById(categoryId, connectedUser));
+    }
+
+    @PostMapping
+    @ResponseStatus(CREATED)
+    public ResponseEntity<CategoryResponse> createCategory(
+            @RequestBody CategoryRequest categoryRequest,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity
+                .status(CREATED)
+                .body(categoryService.createCategory(categoryRequest, connectedUser));
+    }
+
+    @PutMapping("{category-id}")
+    @ResponseStatus(OK)
+    public ResponseEntity<CategoryResponse> updateCategory(
+            @PathVariable("category-id") Integer categoryId,
+            @RequestBody CategoryRequest categoryRequest,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity
+                .status(OK)
+                .body(categoryService.updateCategory(categoryId, categoryRequest, connectedUser));
+    }
+
+    @DeleteMapping("{category-id}")
+    @ResponseStatus(NO_CONTENT)
+    public ResponseEntity<Void> deleteCategory(
+            @PathVariable("category-id") Integer categoryId,
+            Authentication connectedUser
+    ) {
+        categoryService.deleteCategory(categoryId, connectedUser);
+        return ResponseEntity
+                .status(NO_CONTENT)
+                .build();
+    }
+
+    @PatchMapping("{category-id}")
+    @ResponseStatus(NO_CONTENT)
+    public ResponseEntity<Void> enableOrDisableCategory(
+            @PathVariable("category-id") Integer categoryId,
+            Authentication connectedUser
+    ) {
+        categoryService.enableOrDisableCategory(categoryId, connectedUser);
+        return ResponseEntity
+                .status(NO_CONTENT)
+                .build();
+    }
+}

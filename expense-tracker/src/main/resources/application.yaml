@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: expense-tracker
+  profiles:
+    active: dev
+
+springdoc:
+  default-consumes-media-type: application/json
+
+server:
+  port: 8082
+  servlet:
+    context-path: /api/v1/
