@@ -28,28 +28,28 @@
 
 ## Application Screenshots
 1. **Authentication**
-   - **Login Page**
+   1. **Login Page**
        ![login page](product-screenshot/auth/login-page.png)
-   -**Signup page**
+   2. **Signup page**
        ![signup page](product-screenshot/auth/sign-up-page.png)
 2. **Dashboard**
-   - **Dashboard Page**
+   1. **Dashboard Page**
       ![dashboard page](product-screenshot/dashboard/dashboard-page.png)
 3. **Categories**
-   - **All Categories**
+   1. **All Categories**
      ![all categories page](product-screenshot/categories/all-categories-page.png)
-   - **Create Category**
+   2. **Create Category**
      ![create category page](product-screenshot/categories/create-category-page.png)
-   - **Edit Category**
+   3. **Edit Category**
      ![edit category page](product-screenshot/categories/update-category-page.png)
-   - **Delete Category**
+   4. **Delete Category**
          ![delete category page](product-screenshot/categories/delete-category-page.png)
 4. **Expenses**
-  - **All Expenses**
-    ![all expenses page](product-screenshot/expenses/all-expenses-page.png)
-  - **Create Expense**
-    ![create expense page](product-screenshot/expenses/create-expense-page.png)
-  - **Edit Expense**
-    ![edit expense page](product-screenshot/expenses/update-expense-page.png)
-  - **Delete Expense**
-    ![delete expense page](product-screenshot/expenses/delete-expense-page.png)
+   1. **All Expenses**
+     ![all expenses page](product-screenshot/expenses/all-expenses-page.png)
+   2. **Create Expense**
+     ![create expense page](product-screenshot/expenses/create-expense-page.png)
+   3. **Edit Expense**
+     ![edit expense page](product-screenshot/expenses/update-expense-page.png)
+   4. **Delete Expense**
+     ![delete expense page](product-screenshot/expenses/delete-expense-page.png)
