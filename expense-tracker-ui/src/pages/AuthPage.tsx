@@ -7,6 +7,8 @@ import {
 } from "../services/AuthService.ts";
 import type { AxiosError, AxiosResponse } from "axios";
 import { extractErrorMessage } from "../utils/Utils.ts";
+import { useAuth } from "../utils/UseAuth.tsx";
+import { type NavigateFunction, useNavigate } from "react-router-dom";
 
 type Mode = "login" | "signup";
 type LoginRegisterForm = {
@@ -16,8 +18,13 @@ type LoginRegisterForm = {
   password: string;
 }
 
-function AuthPage(): ReactElement {
-  const [mode, setMode] = useState<Mode>("login");
+type AuthPageProps = {
+  initialMode: Mode;
+};
+
+function AuthPage({ initialMode }: AuthPageProps): ReactElement {
+  const { login } = useAuth();
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [loginRegisterForm, setLoginRegisterForm] = useState<LoginRegisterForm>({
     firstname: "",
     lastname: "",
@@ -25,6 +32,7 @@ function AuthPage(): ReactElement {
     password: ""
   })
   const [error, setError] = useState<string | undefined>(undefined);
+  const navigator: NavigateFunction = useNavigate();
 
   function handleSubmit(e: FormEvent): void {
     e.preventDefault();
@@ -48,8 +56,12 @@ function AuthPage(): ReactElement {
       const authRequest: AuthenticationRequest =
         {email: loginRegisterForm.email, password: loginRegisterForm.password}
       authenticate(authRequest)
-        .then((response: AxiosResponse<AuthenticationResponse>) =>
-          console.log(response.data.token))
+        .then((response: AxiosResponse<AuthenticationResponse>) => {
+          const token: string = response.data.token;
+          console.log(token);
+          login(token);
+          navigator("/dashboard");
+        })
         .catch((error: AxiosError) => {
           setError(extractErrorMessage(error));
         });
